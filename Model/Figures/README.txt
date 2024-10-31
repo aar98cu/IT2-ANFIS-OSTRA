@@ -1,0 +1,1 @@
+The figures shown here have not been refined and only show the IT2-ANFIS OSTRA results. The comparison of IT2-ANFIS OSTRA vs T1-ANFIS vs yr is shown in the Images folder.
