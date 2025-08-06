@@ -30,3 +30,12 @@ git clone https://github.com/your-username/IT2-ANFIS-OSTRA.git
 ```bash
 cd IT2-ANFIS-OSTRA
 ```
+
+### Python Prototype
+
+An initial Python translation of the IT2-ANFIS OSTRA model lives in the `python` directory. To try it out:
+
+```bash
+pip install numpy
+python -m python.main
+```
