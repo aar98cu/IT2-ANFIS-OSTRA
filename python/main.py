@@ -1,6 +1,5 @@
 import numpy as np
 from pathlib import Path
-
 try:  # Allow running as a module or as a script
     from .it2anfis import train_anfis, evalmyanfis
 except ImportError:  # pragma: no cover - fallback when executed directly
