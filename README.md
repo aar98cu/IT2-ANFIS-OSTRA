@@ -39,3 +39,13 @@ An initial Python translation of the IT2-ANFIS OSTRA model lives in the `python`
 pip install numpy
 python -m python.main
 ```
+
+### Training Interface
+
+A simple graphical interface is available to configure training parameters and select a data file:
+
+```bash
+python -m python.gui
+```
+
+The interface allows choosing the dataset, number of epochs, membership functions and other training settings.
