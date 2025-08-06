@@ -1,6 +1,9 @@
 import numpy as np
 from pathlib import Path
-from .it2anfis import train_anfis, evalmyanfis
+try:  # Allow running as a module or as a script
+    from .it2anfis import train_anfis, evalmyanfis
+except ImportError:  # pragma: no cover - fallback when executed directly
+    from it2anfis import train_anfis, evalmyanfis
 
 def main():
     name = 'ex2'
