@@ -90,9 +90,9 @@ def output3_4_5_6(anfis: IT2ANFIS) -> IT2ANFIS:
 def output7(anfis: IT2ANFIS) -> IT2ANFIS:
     st = anfis.ni + anfis.ni * anfis.mf + 2 * anfis.nr
     inp = anfis.nodes[:anfis.ni, 0]
-    for i in range(anfis.nr):
-        wn = anfis.nodes[st - anfis.nr + i, 0]
-        anfis.nodes[st + i, 0] = wn * (np.sum(anfis.cparams[i, :-1] * inp) + anfis.cparams[i, -1])
+    wn = anfis.nodes[st - anfis.nr:st, 0]
+    consequent = np.einsum('ij,j->i', anfis.cparams[:, :-1], inp) + anfis.cparams[:, -1]
+    anfis.nodes[st:st + anfis.nr, 0] = wn * consequent
     return anfis
 
 
@@ -104,15 +104,10 @@ def output8(anfis: IT2ANFIS) -> IT2ANFIS:
 
 def get_kalman_data(anfis: IT2ANFIS, target: float) -> np.ndarray:
     st = anfis.ni + anfis.ni * anfis.mf + anfis.nr
-    kalman_data = np.zeros((anfis.ni + 1) * anfis.nr + 1)
-    j = 0
-    for i in range(st, st + anfis.nr):
-        for k in range(anfis.ni):
-            kalman_data[j] = anfis.nodes[i, 0] * anfis.nodes[k, 0]
-            j += 1
-        kalman_data[j] = anfis.nodes[i, 0]
-        j += 1
-    kalman_data[j] = target
+    w = anfis.nodes[st:st + anfis.nr, 0]
+    x = anfis.nodes[:anfis.ni, 0]
+    w_x = np.einsum('i,j->ij', w, x).reshape(-1)
+    kalman_data = np.concatenate([w_x, w, [target]])
     return kalman_data
 
 
@@ -197,11 +192,10 @@ def update_de_do(anfis: IT2ANFIS) -> IT2ANFIS:
         s += 1
     s = 0
     start = 1 + anfis.ni + anfis.ni * anfis.mf + 2 * anfis.nr
-    for i in range(start, anfis.config.shape[0]):
-        for j in range(anfis.ni + 1):
-            do_dp = dconsequent_dp(anfis, i, j)
-            anfis.cparam_de_do[s, j] += anfis.de_do[i,0] * do_dp
-        s += 1
+    de = anfis.de_do[start:start + anfis.nr, 0]
+    wn = anfis.nodes[start - anfis.nr:start, 0]
+    inp = np.append(anfis.nodes[:anfis.ni,0], 1)
+    anfis.cparam_de_do += np.outer(de * wn, inp)
     return anfis
 
 
