@@ -82,6 +82,15 @@ def train_with_ex2() -> float:
     y_pred = anfis.predict(X)
     rmse = float(np.sqrt(np.mean((y - y_pred) ** 2)))
     print(f"RMSE: {rmse:.4f}")
+    for i, cons in enumerate(anfis.consequents):
+        coeffs = ", ".join(f"{c:.4f}" for c in cons)
+        print(f"Rule {i} consequents: {coeffs}")
+    for i, mfs in enumerate(anfis.mfs):
+        for j, mf in enumerate(mfs):
+            print(
+                f"Input {i} MF {j}: mean={mf.mean:.4f}, "
+                f"sigma={mf.sigma:.4f}, eta={mf.eta:.4f}"
+            )
     return rmse
 
 
